@@ -57,6 +57,9 @@ class File {
     {
         $className = __NAMESPACE__ .'\File';
         switch ($type) {
+            case 'unused':
+                $className .= 'Unused';
+                break;
             case 'address':
                 $className .= 'Address';
                 break;
@@ -149,6 +152,8 @@ class File {
 
         // Sanity check
         switch ($matches['type']) {
+            case 'unused':
+
             case 'address':
             case 'address-group':
             case 'application-group':
