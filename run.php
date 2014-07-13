@@ -16,7 +16,7 @@ spl_autoload_register(function ($className) {
 
 // Config, where can we find the XML files and how should our output file be named
 $path = __DIR__ . DIRECTORY_SEPARATOR . 'configs';
-$outputFileName = 'normalized.'. time() .'.csv'; // The filename is prefixed with the reference group name
+$outputFileName = 'normalized.'. time(); // The filename is prefixed (and suffixed) with the reference group name
 
 // Debug wrapper, if you don't want any output, just comment the output directive.
 function dbug($str) {
@@ -106,7 +106,8 @@ foreach ($fileRepository->getReferenceGroups() as $referenceGroup) {
     // - Get application-group references -- /response/result/applications/entry
     $applicationGroups = $files['application-group']->getGroupNestedMembers();
 
-
+    // All files
+    dbug('==> Building CSV file for ALL rules');
     renderCSV(
         $files['pre-rulebase-security'],
         $addresses,
@@ -115,6 +116,25 @@ foreach ($fileRepository->getReferenceGroups() as $referenceGroup) {
         $applicationGroups,
         $addressGroupAlias
     );
+
+    // Only the unused files
+    if (isset($files['unused'])) {
+        dbug('==> Found a file with UNUSED rules, processing...');
+        $unusedRules = $files['unused']->getRules();
+
+        if (count($unusedRules)) {
+            dbug('==> Building CSV file for UNUSED rules');
+            renderCSV(
+                $files['pre-rulebase-security'],
+                $addresses,
+                $addressGroups,
+                $serviceGroups,
+                $applicationGroups,
+                $addressGroupAlias,
+                $unusedRules
+            );
+        }
+    }
 }
 
 /**
@@ -124,16 +144,20 @@ foreach ($fileRepository->getReferenceGroups() as $referenceGroup) {
  * @param array $serviceGroups
  * @param array $applicationGroups
  * @param array $addressGroupAlias
+ * @param array $unused
  */
 function renderCSV(
     \PaloAlto\FilePreRuleBaseSecurity $file,
-    $addresses,
-    $addressGroups,
-    $serviceGroups,
-    $applicationGroups,
-    $addressGroupAlias
+    array $addresses,
+    array $addressGroups,
+    array $serviceGroups,
+    array $applicationGroups,
+    array $addressGroupAlias,
+    array $unused = null
 ) {
     global $outputFileName;
+
+    $processingUnused = count($unused);
 
     /**
      * - from
@@ -160,6 +184,13 @@ function renderCSV(
 
         dbug("Starting with the rule name");
         $line['rule-name'] = (string) $ruleEntry->attributes()->name;
+
+        if ($processingUnused && !isset($unused[$line['rule-name']])) {
+            dbug("  Ignoring this rule, since it's not UNUSED and I'm working on the unused list.");
+            continue;
+        } else if ($processingUnused) {
+            dbug("  Processing this rule, since I found it on the UNUSED list and I'm working on that list.");
+        }
 
 
         dbug("Starting with FROM members");
@@ -259,8 +290,13 @@ function renderCSV(
         $lines[] = $line;
     }
 
+    if ($processingUnused) {
+        $fullOutputFileName = $file->reference .'.'. $outputFileName .'-unused.csv';
+    } else {
+        $fullOutputFileName = $file->reference .'.'. $outputFileName .'-all.csv';
+    }
 
-    $fd = fopen($file->reference .'.'. $outputFileName, 'at');
+    $fd = fopen($fullOutputFileName, 'at');
     foreach ($lines as $line) {
 
         // Write a line to our output file
