@@ -25,7 +25,7 @@ if (is_file($outputFileName)) {
 
 // Debug wrapper, if you don't want any output, just comment the output directive.
 function dbug($str) {
-    #echo $str, "\n";
+    echo $str, "\n";
 }
 
 
