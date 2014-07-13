@@ -4,6 +4,8 @@ parsoalto
 Palo Alto Networks Rule Parser
 
 This toolset generates human readable ip - ip rules in csv (Note: it does it in memory so reserve some)
+It also generates a csv file with all rules that are unused.
+
 Requirements:
  - xmllint 
  - PHP 5.x
@@ -15,7 +17,7 @@ Requirements:
 Usage:
 
 Generate an api key by going to the firewall:
- https://FIREWALL/api?type=keygen&user=USERNAME&password=PASSWORD
+ `https://FIREWALL/api?type=keygen&user=USERNAME&password=PASSWORD`
 
 Create the file `keyfile` in the root directory and paste the generated key in this file.
 
