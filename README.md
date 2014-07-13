@@ -4,11 +4,15 @@ parsoalto
 Palo Alto Networks Rule Parser
 
 This toolset generates human readable ip - ip rules in csv (Note: it does it in memory so reserve some)
+
 It also generates a csv file with all rules that are unused on firewalls. (working on a panorama fix)
 
-note! firewalls managed by a panorama need to be polled through panorama, otherwise your results will be useless
+Note! 
+---
+Firewalls managed by a panorama need to be polled through panorama, otherwise your results will be useless
 
 Requirements:
+---
  - xmllint 
  - PHP 5.x
  - curl
@@ -17,7 +21,7 @@ Requirements:
  - A Palo Alto firewall and/or Panorama ;)
 
 Usage:
-
+---
 Generate an api key by going to the firewall:
  `https://FIREWALL/api?type=keygen&user=USERNAME&password=PASSWORD`
 
