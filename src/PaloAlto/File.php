@@ -40,7 +40,7 @@ class File {
      */
     protected function parse()
     {
-        #throw new \RuntimeException('Implement '. __NAMESPACE__  .'\\'. get_class($this) .'::parse()');
+        throw new \RuntimeException('Implement '. __NAMESPACE__  .'\\'. get_class($this) .'::parse()');
     }
 
 
