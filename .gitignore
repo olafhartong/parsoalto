@@ -1,7 +1,6 @@
-configs/
 firewallip
 keyfile
 panoramaip
 vsys
 *.csv
-
+configs/*.xml
