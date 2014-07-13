@@ -3,8 +3,7 @@ parsoalto
 
 Palo Alto Networks Rule Parser
 
-This toolset generates human readable ip - ip rules in csv
-
+This toolset generates human readable ip - ip rules in csv (Note: it does it in memory so reserve some)
 Requirements:
  - xmllint 
  - PHP 5.x
