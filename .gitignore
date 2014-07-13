@@ -3,4 +3,5 @@ firewallip
 keyfile
 panoramaip
 vsys
+*.csv
 
