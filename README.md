@@ -14,16 +14,15 @@ Requirements:
 
 Usage:
 
-Generate an api key by going to the firewall > https://FIREWALL/api?type=keygen&user=USERNAME&password=PASSWORD
-Create a keyfile in the dir and paste the generated key into it.
+Generate an api key by going to the firewall:
+ https://FIREWALL/api?type=keygen&user=USERNAME&password=PASSWORD
 
-Create a panorama, vsys and firewall file.
+Create the file `keyfile` in the root directory and paste the generated key in this file.
 
-Create a configs dir
+Create the following files also: `panorama`, `vsys` and `firewall`
 
+run `./get-firewall-configs.sh` or `./get-panorama-configs.sh`
 
-run get-firewall-configs.sh or get-firewall-configs.sh
-
-run make-csv
+run `./make-csv.sh`
 
 done!
