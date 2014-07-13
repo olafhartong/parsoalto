@@ -51,8 +51,12 @@ foreach ($files as $file) {
     }
 
     // Determining the type of file
-    $paFile = PaloAlto\File::createAndParse($file->getPathname());
-    $fileRepository->addFile($paFile);
+    try {
+        $paFile = PaloAlto\File::createAndParse($file->getPathname());
+        $fileRepository->addFile($paFile);
+    } catch (\InvalidArgumentException $e) {
+        dbug('Unable to add "'. $file->getFilename() .'", reason: '. $e->getMessage());
+    }
 }
 unset($files, $file);
 
