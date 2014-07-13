@@ -12,8 +12,8 @@
 key=$(cat keyfile)
 # Firewall IPs
 fw=$(cat firewallip)
-# File prefix
-prefix='TNO'
+# File prefix per prefixiroment
+prefix='firewall'
 # Virtual system(s)
 vsys='vsys1'
 # Location to store the configs
@@ -38,8 +38,8 @@ echo "==================================================="
 echo "                  getting configs"
 echo "==================================================="
   for firewall in $fw; do
-   for host in $vsys; do
-    for url in $config; do
+    for host in $vsys; do
+     for url in $config; do
       fileurl=`echo $url | sed 's@/@-@g'`
       ipfilename=`echo $firewall | sed 's/\.//g'`
       echo "Fetching $firewall/$host/$url"
@@ -48,7 +48,7 @@ echo "==================================================="
   done
  echo "Fetching $firewall/$host/unused-rules"
  curl -s -k "https://$firewall/api/?type=op&cmd=<show><running><rule-use><rule-base>security</rule-base><type>unused</type><vsys>$vsys</vsys></rule-use></running></show>&key=$key" | xmllint --format --recover - > $location$prefix-$ipfilename-$host.unused.$timestamp.xml
-done
+ done
 echo "==================================================="
 echo "                     all done"
 echo "==================================================="
