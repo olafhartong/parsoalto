@@ -15,7 +15,7 @@ spl_autoload_register(function ($className) {
 });
 
 // Config, where can we find the XML files and how should our output file be named
-$path = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+$path = __DIR__ . DIRECTORY_SEPARATOR . 'configs';
 $outputFileName = 'normalized.'. time() .'.csv'; // The filename is prefixed with the reference group name
 
 
