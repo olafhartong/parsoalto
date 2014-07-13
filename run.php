@@ -1,7 +1,7 @@
 <?php
 
 // Make sure our environment it sane
-error_reporting(E_ALL & E_STRICT);
+error_reporting(-1);
 ini_set('display_errors', 1 );
 date_default_timezone_set('Etc/UTC');
 
@@ -18,11 +18,6 @@ spl_autoload_register(function ($className) {
 $path = __DIR__ . DIRECTORY_SEPARATOR . 'data';
 $outputFileName = 'normalized.'. time() .'.csv'; // The filename is prefixed with the reference group name
 
-
-if (is_file($outputFileName)) {
-    unlink($outputFileName);
-}
-
 // Debug wrapper, if you don't want any output, just comment the output directive.
 function dbug($str) {
     echo $str, "\n";
@@ -35,7 +30,12 @@ function dbug($str) {
 
 
 // Find. Sie. Files
-$files = new RecursiveDirectoryIterator($path);
+try {
+    $files = new RecursiveDirectoryIterator($path);
+} catch (UnexpectedValueException $e) {
+    die('Unable to traverse "'. $path .'", is the directory readable?');
+}
+
 $fileRepository = new PaloAlto\FileRepository();
 
 
@@ -56,6 +56,14 @@ foreach ($files as $file) {
 }
 unset($files, $file);
 
+
+if ( ! count($fileRepository)) {
+    die('Found 0 files to parse, in "'. $path .'"');
+}
+
+if (is_file($outputFileName)) {
+    unlink($outputFileName);
+}
 
 // Gathering all shared data, we'll be using that as fall-back over all references
 foreach ($fileRepository->getSharedGroups() as $sharedGroup) {
