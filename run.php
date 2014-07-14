@@ -287,6 +287,13 @@ function renderCSV(
             $line['service'][] = $value;
         }
 
+        dbug("Starting with FROM description");
+        $line['description'] = array();
+        foreach ($ruleEntry->description as $member) {
+            $line['description'][] = (string) $member;
+        }
+
+
         $lines[] = $line;
     }
 
