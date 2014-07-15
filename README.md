@@ -5,7 +5,7 @@ Palo Alto Networks Rule Parser
 
 This toolset generates human readable ip - ip rules in csv (Note: it does it in memory so reserve some)
 
-It also generates a csv file with all rules that are unused on firewalls. (working on a panorama fix)
+It also generates a csv file with all rules that are unused on firewalls. Panorama is not able to output unused rules so doing used rules for panorama configs.
 
 Note! 
 ---
