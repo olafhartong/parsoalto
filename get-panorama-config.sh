@@ -37,16 +37,16 @@ echo "==================================================="
 echo "                  getting configs"
 echo "==================================================="
    for host in $vsys; do
-######### In panorama unused rules need to be generated so generating them now polling them after the rest of the run per host so it will be done to pull.
-      echo "Requesting $host/unused/rules"
-      unused=$(curl -s -k "https://$panorama/api/?type=op&cmd=<show><rule-use><type>used</type><rule-base>security</rule-base><device-group>$host</device-group></rule-use></show>&key=$key" | xmllint --format --recover - | grep '<job>' | tr \<\/job\> " " | tr -d ' ')
+######### In panorama used rules need to be generated so generating them now polling them after the rest of the run per host so it will be done to pull.
+      echo "Requesting $host/used/rules"
+      used=$(curl -s -k "https://$panorama/api/?type=op&cmd=<show><rule-use><type>used</type><rule-base>security</rule-base><device-group>$host</device-group></rule-use></show>&key=$key" | xmllint --format --recover - | grep '<job>' | tr \<\/job\> " " | tr -d ' ')
     for url in $config; do
       fileurl=`echo $url | sed 's@/@-@g'`
       echo "Fetching $host/$url"
       curl -s -k "https://$panorama/api/?type=config&action=get&key=$key&xpath=/config/devices/entry\[@name='localhost.localdomain'\]/device-group/entry\[@name='$host'\]/$url" | xmllint --format --recover -  > $location$host.$fileurl.$timestamp.xml
     done
-  echo "Fetching $host/unused/rules"
-  curl -s -k "https://$panorama/api/?type=op&cmd=<show><jobs><id>$unused</id></jobs></show>&key=$key" | xmllint --format --recover - > $location$host.unused.$timestamp.xml
+  echo "Fetching $host/used/rules"
+  curl -s -k "https://$panorama/api/?type=op&cmd=<show><jobs><id>$used</id></jobs></show>&key=$key" | xmllint --format --recover - > $location$host.used.$timestamp.xml
   done
   echo "Fetching $panorama/shared/address"
   curl -s -k "https://$panorama/api/?type=config&action=get&key=$key&xpath=/config/shared/address" | xmllint --format --recover - > $location$prefix.shared.address.$timestamp.xml
