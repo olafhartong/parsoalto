@@ -13,7 +13,7 @@ key=$(cat keyfile)
 # Panorama IP
 panorama=$(cat panoramaip)
 # Panorama or enviroment name
-prefix='jubit2'
+prefix='CHANGEME'
 # Virtual systems
 vsys=$(cat vsys)
 # Location to store the configs
