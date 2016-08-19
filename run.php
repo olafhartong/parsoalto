@@ -75,9 +75,8 @@ foreach ($fileRepository->getSharedGroups() as $sharedGroup) {
 
     $sharedAddresses = $sharedFiles['address']->getAddresses();
     $sharedAddressesGroups = $sharedFiles['address-group']->getGroups();
+    $sharedAddressGroupAlias = $sharedFiles['address-group']->getGroupNestedMembers();
 }
-unset($sharedFiles);
-
 
 
 // NON-SHARED
@@ -114,7 +113,10 @@ foreach ($fileRepository->getReferenceGroups() as $referenceGroup) {
         $addressGroups,
         $serviceGroups,
         $applicationGroups,
-        $addressGroupAlias
+        $addressGroupAlias,
+	null,
+	$sharedAddressesGroups,
+	$sharedAddressGroupAlias
     );
 
     // Only the unused files
@@ -131,7 +133,9 @@ foreach ($fileRepository->getReferenceGroups() as $referenceGroup) {
                 $serviceGroups,
                 $applicationGroups,
                 $addressGroupAlias,
-                $unusedRules
+                $unusedRules,
+	        $sharedAddressesGroups,
+        	$sharedAddressGroupAlias
             );
         }
     }
@@ -153,7 +157,9 @@ function renderCSV(
     array $serviceGroups,
     array $applicationGroups,
     array $addressGroupAlias,
-    array $unused = null
+    array $unused = null,
+    array $sharedAddressesGroups,
+    array $sharedAddressGroupAlias
 ) {
     global $outputFileName;
 
@@ -217,6 +223,12 @@ function renderCSV(
                     dbug("      $strMember => $groupAlias => {$addresses[ $groupAlias ]}");
                     $value[] = $addresses[ $groupAlias ];
                 }
+            } else if (isset($sharedAddressesGroups[$strMember])) {
+                $value = array();
+                foreach ($sharedAddressGroupAlias[$strMember] as $groupAlias) {
+                    dbug(" SHARED     $strMember => $groupAlias => {$addresses[ $groupAlias ]}");
+                    $value[] = $addresses[ $groupAlias ];
+                }
             } else if (isset($addresses[$strMember])) {
                 dbug("  $strMember is a direct association to an address ({$addresses[$strMember]})");
                 $value = $addresses[$strMember];
@@ -239,6 +251,12 @@ function renderCSV(
                 $value = array();
                 foreach ($addressGroupAlias[$strMember] as $groupAlias) {
                     dbug("      $strMember => $groupAlias => {$addresses[ $groupAlias ]}");
+                    $value[] = $addresses[ $groupAlias ];
+                }
+            } else if (isset($sharedAddressesGroups[$strMember])) {
+                $value = array();
+                foreach ($sharedAddressGroupAlias[$strMember] as $groupAlias) {
+                    dbug(" SHARED     $strMember => $groupAlias => {$addresses[ $groupAlias ]}");
                     $value[] = $addresses[ $groupAlias ];
                 }
             } else if (isset($addresses[$strMember])) {
