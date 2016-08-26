@@ -27,7 +27,7 @@ class FileAbstractGroup extends File
                 $this->members[$name] = array();
             }
 
-            foreach ($xmlEntry->children() as $member) {
+            foreach ($xmlEntry->static->member as $member) {
                 $this->members[$name][] = (string) $member;
             }
         }
